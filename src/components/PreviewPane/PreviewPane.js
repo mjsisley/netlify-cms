@@ -76,20 +76,22 @@ export default class PreviewPane extends React.Component {
 
   handleIframeRef = (ref) => {
     if (ref) {
-      registry.getPreviewStyles().forEach((style) => {
-        const linkEl = document.createElement('link');
-        linkEl.setAttribute('rel', 'stylesheet');
-        linkEl.setAttribute('href', style);
-        ref.contentDocument.head.appendChild(linkEl);
-      });
-
-      const base = document.createElement('base');
-      base.setAttribute('target', '_blank');
-      ref.contentDocument.head.appendChild(base);
+//       TODO: We want the Head and Body to be used in the iframe from the Preview Template
+      
+//       registry.getPreviewStyles().forEach((style) => {
+//         const linkEl = document.createElement('link');
+//         linkEl.setAttribute('rel', 'stylesheet');
+//         linkEl.setAttribute('href', style);
+//         ref.contentDocument.head.appendChild(linkEl);
+//       });
+//       const base = document.createElement('base');
+//       base.setAttribute('target', '_blank');
+//       ref.contentDocument.head.appendChild(base);
 
       this.previewEl = document.createElement('div');
-      this.iframeBody = ref.contentDocument.body;
-      this.iframeBody.appendChild(this.previewEl);
+//       this.iframeBody = ref.contentDocument.body;
+      this.iframeBodyAndHead = ref.contentDocument;
+//       this.iframeBody.appendChild(this.previewEl);      
       this.renderPreview();
     }
   };
@@ -110,7 +112,7 @@ export default class PreviewPane extends React.Component {
     // We need to use this API in order to pass context to the iframe
     ReactDOM.unstable_renderSubtreeIntoContainer(
       this,
-      <ScrollSyncPane attachTo={this.iframeBody}>
+      <ScrollSyncPane attachTo={this.iframeBodyAndHead}>
         {React.createElement(component, previewProps)}
       </ScrollSyncPane>
       , this.previewEl);
